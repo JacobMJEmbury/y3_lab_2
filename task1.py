@@ -25,3 +25,39 @@ plt.show()
 # The longer tail on the right is actually the astronomical objects we want to see - higher intensity objects
 
 # Probably need to be at least 3sig to get outside of the range of random noise from the background
+
+# FIND BRIGHT SPOTS:
+img_data = hdulist[0].data
+
+#print("Length of image data:" + str(len(img_data[:, 0])))
+#print("Length of image data:" + str(len(img_data[0, :])))
+
+rows, cols = len(img_data[:, 0]), len(img_data[0, :])
+mask = np.zeros((rows, cols))
+masked_img_data = img_data + mask
+
+'''
+# Very inefficient - could probs just use argmax for numpy and acheieve the same thing in O1 time... so maybe just do that... Instead of On**2
+
+for bright in range(0, 100):
+    brightest=0
+    brightest_coords=[0,0]
+    for row in range(10, rows):
+        for col in range(0, cols):
+            if (masked_img_data[row, col] > brightest):
+                brightest = masked_img_data[row, col]
+                brightest_coords = [row, col]
+    
+    print(str(brightest) + "||||" + str(brightest_coords))
+    mask[brightest_coords[0], brightest_coords[1]] = mask[brightest_coords[0], brightest_coords[1]] + brightest
+    masked_img_data = masked_img_data - mask
+'''
+
+# Produces the top 100 most intense points in the img
+for count in range(100):
+    row, col = np.unravel_index(np.argmax(masked_img_data), masked_img_data.shape)
+    print(str(masked_img_data[row, col]) + " |||| (" + str(row) + "," + str(col) + ")")
+    mask[row, col] = mask[row, col] + masked_img_data[row, col]
+    masked_img_data = masked_img_data - mask
+
+
