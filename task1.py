@@ -32,7 +32,7 @@ img_data = hdulist[0].data
 #print("Length of image data:" + str(len(img_data[:, 0])))
 #print("Length of image data:" + str(len(img_data[0, :])))
 
-rows, cols = len(img_data[:, 0]), len(img_data[0, :])
+rows, cols = len(img_data), len(img_data[0, :])
 mask = np.zeros((rows, cols))
 masked_img_data = img_data + mask
 
@@ -54,10 +54,9 @@ for bright in range(0, 100):
 '''
 
 # Produces the top 100 most intense points in the img
-for count in range(100):
+for count in range(1000):
     row, col = np.unravel_index(np.argmax(masked_img_data), masked_img_data.shape)
     print(str(masked_img_data[row, col]) + " |||| (" + str(row) + "," + str(col) + ")")
     mask[row, col] = mask[row, col] + masked_img_data[row, col]
     masked_img_data = masked_img_data - mask
-
 
