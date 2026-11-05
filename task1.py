@@ -2,7 +2,7 @@ from astropy.io import fits
 import numpy as np
 import matplotlib.pyplot as plt
 
-hdulist = fits.open("/Users/jacobembury/Downloads/Astro/Fits_Data/mosaic.fits")
+hdulist = fits.open("Astro/Fits_Data/mosaic.fits")
 
 # Get the header data (MAGZPT - this is the only thing we really need - instramental zero point)
 print(hdulist[0].header)
@@ -54,9 +54,27 @@ for bright in range(0, 100):
 '''
 
 # Produces the top 100 most intense points in the img
-for count in range(1000):
+for count in range(10000):
     row, col = np.unravel_index(np.argmax(masked_img_data), masked_img_data.shape)
-    print(str(masked_img_data[row, col]) + " |||| (" + str(row) + "," + str(col) + ")")
+    print(str(masked_img_data[row, col]) + " |||| (" + str(col) + "," + str(row) + ")")
     mask[row, col] = mask[row, col] + masked_img_data[row, col]
     masked_img_data = masked_img_data - mask
 
+
+
+
+# CLAUDE HERE:
+
+# Astro/view_fits.py turns mosaic.fits into the black and white PNG. To remake it:
+#   cd Astro && python view_fits.py --save Fits_Data/mosaic.png
+# PNG row 0 is the top of the image but FITS row 0 is the bottom, so flip it to line up with the mask.
+overlay = plt.imread("Astro/Fits_Data/mosaic.png")[::-1].copy()
+
+# Draw a red dot on every pixel in the mask. Bigger than 1 px so they still show when zoomed out.
+dot_radius = 3
+for row, col in zip(*np.nonzero(mask)):
+    overlay[max(row - dot_radius, 0):row + dot_radius + 1,
+            max(col - dot_radius, 0):col + dot_radius + 1, :3] = [1, 0, 0]
+
+plt.imsave("Astro/Fits_Data/mosaic_masked.png", overlay, origin="lower")
+print("Saved Astro/Fits_Data/mosaic_masked.png")
