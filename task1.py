@@ -61,6 +61,42 @@ for count in range(10000):
     masked_img_data = masked_img_data - mask
 
 
+# Important notes from the lab:
+# -> Clip the main artifacts from the image by hand most likely... Maybe run a simple algo to remove all these bright strips...
+# -> We can remove "twinkle" stars from the image completely - determine what we keep and what we dont...
+# -> We can do plots and do hypo test to determine if we remove different sections for noise concerns - like clipping the edges
+
+# The first goal:
+# -> classification - and drawing boxes on the plot for stars AND galaxies
+# -> determine what we cut
+# -> determine algo (maybe gradient decent kinda thing) for determing galaxies instead of stars
+
+# Approach:
+# Take the most intense points
+# Draw concentrically larger circles around the point
+# Measure from avg value of intensity on those circles
+# Define cutoff as anything below the backrgound intensity on gaussian
+# Show its a somewhat circular object
+# Anything that cant be classified needs checking and debugging to improve algo...
+# We then remove and mask any points that are in these classification regions so we dont consider 2 points of the same star twice...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # CLAUDE HERE:
