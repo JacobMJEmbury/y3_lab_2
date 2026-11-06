@@ -53,13 +53,14 @@ for bright in range(0, 100):
     masked_img_data = masked_img_data - mask
 '''
 
+'''
 # Produces the top 100 most intense points in the img
 for count in range(10000):
     row, col = np.unravel_index(np.argmax(masked_img_data), masked_img_data.shape)
     print(str(masked_img_data[row, col]) + " |||| (" + str(col) + "," + str(row) + ")")
     mask[row, col] = mask[row, col] + masked_img_data[row, col]
     masked_img_data = masked_img_data - mask
-
+'''
 
 # Important notes from the lab:
 # -> Clip the main artifacts from the image by hand most likely... Maybe run a simple algo to remove all these bright strips...
@@ -80,6 +81,20 @@ for count in range(10000):
 # Anything that cant be classified needs checking and debugging to improve algo...
 # We then remove and mask any points that are in these classification regions so we dont consider 2 points of the same star twice...
 
+rows, cols = len(img_data[:, 0]), len(img_data[0, :])
+sample_subset = img_data[int(0.3*rows):int(0.6*rows), int(0.1*cols):int(0.4*cols)]
+
+
+#### CLAUDE PLOT
+# Percentile limits stop a few very bright pixels washing out the background. origin="lower" matches FITS row order.
+plt.imshow(sample_subset, cmap="gray", origin="lower",
+           vmin=np.percentile(sample_subset, 1), vmax=np.percentile(sample_subset, 99.5))
+plt.colorbar(label="Pixel value")
+plt.title("Sample subset")
+plt.xlabel("Column (within subset)")
+plt.ylabel("Row (within subset)")
+plt.show()
+######
 
 
 
@@ -95,11 +110,7 @@ for count in range(10000):
 
 
 
-
-
-
-
-# CLAUDE HERE:
+#### CLAUDE PLOT
 
 # Astro/view_fits.py turns mosaic.fits into the black and white PNG. To remake it:
 #   cd Astro && python view_fits.py --save Fits_Data/mosaic.png
@@ -114,3 +125,5 @@ for row, col in zip(*np.nonzero(mask)):
 
 plt.imsave("Astro/Fits_Data/mosaic_masked.png", overlay, origin="lower")
 print("Saved Astro/Fits_Data/mosaic_masked.png")
+
+#####
